@@ -2171,6 +2171,20 @@ static int option_probe(struct usb_serial *serial,
 	if (device_flags & NUMEP2 && iface_desc->bNumEndpoints != 2)
 		return -ENODEV;
 
+#if 1 //Added by Quectel
+	//Quectel modules’s interface 4 can be used as USB network device
+	if (serial->dev->descriptor.idVendor == cpu_to_le16(0x2C7C)) {
+	//some interfaces can be used as USB Network device (ecm, rndis, mbim)
+		if (serial->interface->cur_altsetting->desc.bInterfaceClass != 0xFF) {
+			return -ENODEV;
+		}
+		//interface 4 can be used as USB Network device (qmi)
+		else if (serial->interface->cur_altsetting->desc.bInterfaceNumber >= 4) {
+			return -ENODEV;
+		}
+	}
+#endif
+
 	/* Store the device flags so we can use them during attach. */
 	usb_set_serial_data(serial, (void *)device_flags);
 
