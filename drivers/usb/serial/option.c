@@ -2183,6 +2183,13 @@ static int option_probe(struct usb_serial *serial,
 			return -ENODEV;
 		}
 	}
+
+	// USB autosuspend
+	if (serial->dev->descriptor.idVendor == cpu_to_le16(0x2C7C)) {
+		pm_runtime_set_autosuspend_delay(&serial->dev->dev, 3000);
+		usb_enable_autosuspend(serial->dev);
+		device_init_wakeup(&serial->dev->dev, 1); //usb remote wakeup
+	}
 #endif
 
 	/* Store the device flags so we can use them during attach. */
