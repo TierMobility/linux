@@ -1391,6 +1391,9 @@ static int imx_uart_dma_init(struct imx_port *sport)
 		goto err;
 	}
 
+	dev_info(dev, "using %s (tx) and %s (rx) for DMA transfers\n",
+		dma_chan_name(sport->dma_chan_tx), dma_chan_name(sport->dma_chan_rx));
+
 	return 0;
 err:
 	imx_uart_dma_exit(sport);
